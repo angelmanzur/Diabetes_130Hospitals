@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
+import xgboost as xgb
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
 import warnings
 warnings.filterwarnings('ignore')
@@ -35,7 +37,19 @@ def train_model(X_train,y_train):
     gbt_clf = GradientBoostingClassifier()
     gbt_clf.fit(X_train, y_train)
     models.append(gbt_clf)
-
+    
+    # XGBoost
+    model_names.append('XGBoost')
+    xgb_clf = xgb.XGBClassifier()
+    xgb_clf.fit(X_train, y_train)
+    models.append(xgb_clf)
+    
+    # Logistic Regression
+    model_names.append('Logistic Regresion')
+    lr_clf = LogisticRegression(fit_intercept = False, C = 1e12)
+    lr_clf.fit(X_train, y_train)
+    models.append(lr_clf)
+    
     return models, model_names
 
 def predict_all(x1, y1, models):
