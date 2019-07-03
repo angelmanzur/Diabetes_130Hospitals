@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
 import xgboost as xgb
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
 import warnings
 warnings.filterwarnings('ignore')
@@ -17,7 +18,7 @@ def scale_train_test_split(X,y, set_seed=101):
     scaler = StandardScaler()
     scaled_df = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
     target = y # Need to modify depending on target column
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state = set_seed)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state = set_seed, stratify=y)
     return X_train, X_test, y_train, y_test
 
 def train_model(X_train,y_train):
@@ -49,6 +50,17 @@ def train_model(X_train,y_train):
     lr_clf = LogisticRegression(fit_intercept = False, C = 1e12)
     lr_clf.fit(X_train, y_train)
     models.append(lr_clf)
+    
+    # Decision Tree
+    model_names.append('DecisionTree_gini')
+    dtree_clf = DecisionTreeClassifier(criterion='gini', max_depth=8)
+    dtree_clf.fit(X_train, y_train)
+    models.append(dtree_clf)
+
+    model_names.append('DecisionTree_entropy')
+    dtree_clf2 = DecisionTreeClassifier(criterion='entropy', max_depth=8)
+    dtree_clf2.fit(X_train, y_train)
+    models.append(dtree_clf2)
     
     return models, model_names
 
