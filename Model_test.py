@@ -29,36 +29,43 @@ def train_model(X_train,y_train):
     model_names = []
     models = []
     # Adaboost
+    
     model_names.append('AdaBoost')
+    print('Running ' + model_names[-1])
     adaboost_clf = AdaBoostClassifier()
     adaboost_clf.fit(X_train, y_train)
     models.append(adaboost_clf)
     
     # GradientBoost
     model_names.append('GradientBoost')
+    print('Running ' + model_names[-1])
     gbt_clf = GradientBoostingClassifier()
     gbt_clf.fit(X_train, y_train)
     models.append(gbt_clf)
     
     # # XGBoost
-    # model_names.append('XGBoost')
-    # xgb_clf = xgb.XGBClassifier()
-    # xgb_clf.fit(X_train, y_train)
-    # models.append(xgb_clf)
+#     model_names.append('XGBoost')
+#     print('Running ' + model_names[-1])
+#     xgb_clf = xgb.XGBClassifier()
+#     xgb_clf.fit(X_train, y_train)
+#     models.append(xgb_clf)
     
     # Logistic Regression
     model_names.append('Logistic Regresion')
+    print('Running ' + model_names[-1])
     lr_clf = LogisticRegression(fit_intercept = False, C = 1e12)
     lr_clf.fit(X_train, y_train)
     models.append(lr_clf)
     
     # Decision Tree
     model_names.append('DecisionTree_gini')
+    print('Running ' + model_names[-1])
     dtree_clf = DecisionTreeClassifier(criterion='gini', max_depth=8)
     dtree_clf.fit(X_train, y_train)
     models.append(dtree_clf)
 
     model_names.append('DecisionTree_entropy')
+    print('Running ' + model_names[-1])
     dtree_clf2 = DecisionTreeClassifier(criterion='entropy', max_depth=8)
     dtree_clf2.fit(X_train, y_train)
     models.append(dtree_clf2)
