@@ -5,6 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import AdaBoostClassifier, GradientBoostingClassifier
+from sklearn.tree import DecisionTreeClassifier
 import xgboost as xgb
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, classification_report
 import warnings
@@ -38,11 +39,11 @@ def train_model(X_train,y_train):
     gbt_clf.fit(X_train, y_train)
     models.append(gbt_clf)
     
-    # XGBoost
-    model_names.append('XGBoost')
-    xgb_clf = xgb.XGBClassifier()
-    xgb_clf.fit(X_train, y_train)
-    models.append(xgb_clf)
+    # # XGBoost
+    # model_names.append('XGBoost')
+    # xgb_clf = xgb.XGBClassifier()
+    # xgb_clf.fit(X_train, y_train)
+    # models.append(xgb_clf)
     
     # Logistic Regression
     model_names.append('Logistic Regresion')
@@ -50,6 +51,18 @@ def train_model(X_train,y_train):
     lr_clf.fit(X_train, y_train)
     models.append(lr_clf)
     
+    # Decision Tree
+    # model_names.append('DecisionTree_gini')
+    # dtree_clf = DecisionTreeClassifier(criterion='gini')
+    # dtree_clf.fit(X_train, y_train)
+    # models.append(dtree_clf)
+
+    # model_names.append('DecisionTree_entropy')
+    # dtree_clf2 = DecisionTreeClassifier(criterion='entropy')
+    # dtree_clf2.fit(X_train, y_train)
+    # models.append(dtree_clf2)
+
+
     return models, model_names
 
 def predict_all(x1, y1, models):
