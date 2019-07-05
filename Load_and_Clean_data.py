@@ -10,7 +10,7 @@ def load_raw_data():
 
 def clean_data(df):
     # drop some unused columns
-    df.drop(columns = ['patient_nbr','citoglipton','weight','examide','encounter_id'],inplace=True)
+    df.drop(columns = ['patient_nbr','citoglipton','weight','examide','encounter_id', 'payer_code'],inplace=True)
     # weight, drop coz 97% missing
     # citoglipton, and examide are constant values
     # encounter_id is just an id
@@ -18,11 +18,12 @@ def clean_data(df):
     # race, missing set to other 2%
     df.race.replace('?', 'Other',inplace=True)  
 
-    df.drop(columns = ['diag_1', 'diag_2','diag_3','payer_code'],inplace=True)
+#     df.drop(columns = ['diag_1', 'diag_2','diag_3'],inplace=True)
 
     # convert change from No, Ch to 0, 1
-    df.change = np.where(df.change=='No',0,1)
-
+    df.medication_change = np.where(df.change=='No',0,1)
+    df.drop('change', axis=1, inplace=True)
+    
     # convert diabetes_med from Yes or No to 1 or 0
     df.diabetesMed = np.where(df.diabetesMed=='Yes',1,0)
 
@@ -31,7 +32,7 @@ def clean_data(df):
 
     df.readmitted = np.where(df.readmitted=='NO', 0, df.readmitted )
     df.readmitted = np.where(df.readmitted=='<30', 1,  df.readmitted )
-    df.readmitted = np.where(df.readmitted=='>30', 2,  df.readmitted )
+    df.readmitted = np.where(df.readmitted=='>30', 0,  df.readmitted )
 
     return df
 
