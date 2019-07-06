@@ -1,6 +1,9 @@
 import warnings
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
+
 warnings.filterwarnings('ignore')
 
 def load_raw_data():
@@ -49,6 +52,7 @@ def clean_eng_data(df):
     df.race.replace('?', 'Other',inplace=True)  
 
 #     df.drop(columns = ['diag_1', 'diag_2', 'diag_3', 'payer_code'], inplace=True)
+    df.drop(columns = ['payer_code'], inplace=True)
 
     # convert change from No, Ch to 0, 1
     df.change = np.where(df.change=='No',0,1)
@@ -63,8 +67,8 @@ def clean_eng_data(df):
 
     df.readmitted = np.where(df.readmitted=='NO', 0, df.readmitted )
     df.readmitted = np.where(df.readmitted=='<30', 1,  df.readmitted )
-    df.readmitted = np.where(df.readmitted=='>30', 0,  df.readmitted )
-    df['readmitted'] = df['readmitted'].astype(int);
+    df.readmitted = np.where(df.readmitted=='>30', 2,  df.readmitted )
+    df['readmitted'] = df['readmitted'].astype(int)
     df.drop(columns=[ 'admission_source_id'], inplace=True)
     
     return df
@@ -110,10 +114,7 @@ def count_meds(df, meds_cols):
 
         df[med] = np.where((df[med]=='Up' ), 1*factor,df[med])
         df[med] = np.where((df[med]=='Down' ), -1*factor,df[med])
-    
-    # remove the medicines
-    df.drop(meds_cols, axis=1, inplace=True)
-    
+
     df['dosage_up_down'] = 0
 #     df['dosage_up'] = 0
 #     df['dosage_down'] = 0
@@ -121,6 +122,11 @@ def count_meds(df, meds_cols):
         df['dosage_up_down'] += df[med]
 #         df['dosage_up'] += np.where(df[med]>0, df[med], 0)
 #         df['dosage_down'] += np.where(df[med]<0, df[med], 0)
+    
+        
+    # remove the medicines
+    df.drop(meds_cols, axis=1, inplace=True)
+    
 
         
     return df
@@ -231,7 +237,7 @@ def get_age_bin(dummy_df):
     dummy_df.drop(columns=to_drop,inplace=True)
     return dummy_df
 
-def get_diagnosis(cleaned_df):
+def get_one_diagnosis(cleaned_df):
     cleaned_df['diagnosis'] = cleaned_df['cat1_diag_1']
     cleaned_df['diagnosis'] = np.where( ((cleaned_df['cat1_diag_2']==cleaned_df['cat1_diag_3']) & (cleaned_df['cat1_diag_2']>0)),
                     cleaned_df['cat1_diag_2'], cleaned_df['cat1_diag_1'] )
@@ -288,7 +294,8 @@ from sklearn.utils.multiclass import unique_labels
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
                           title=None,
-                          cmap=plt.cm.Blues):
+                          cmap=None):
+    #=plt.cm.Blues):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
