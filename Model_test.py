@@ -23,7 +23,7 @@ def scale_train_test_split(X,y, set_seed=101):
     scaler = StandardScaler()
     scaled_df = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
     target = y # Need to modify depending on target column
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state = set_seed, stratify=y)
+    X_train, X_test, y_train, y_test = train_test_split(scaled_df, y, test_size=0.25, random_state = set_seed, stratify=y)
     return X_train, X_test, y_train, y_test
 
 def train_model(X_train,y_train):
@@ -41,11 +41,11 @@ def train_model(X_train,y_train):
     models.append(adaboost_clf)
     
     # GradientBoost
-    model_names.append('GradientBoost')
-    print('Running ' + model_names[-1])
-    gbt_clf = GradientBoostingClassifier()
-    gbt_clf.fit(X_train, y_train)
-    models.append(gbt_clf)
+#     model_names.append('GradientBoost')
+#     print('Running ' + model_names[-1])
+#     gbt_clf = GradientBoostingClassifier()
+#     gbt_clf.fit(X_train, y_train)
+#     models.append(gbt_clf)
     
     # # XGBoost
 #     model_names.append('XGBoost')
@@ -68,11 +68,11 @@ def train_model(X_train,y_train):
     dtree_clf.fit(X_train, y_train)
     models.append(dtree_clf)
 
-    model_names.append('DecisionTree_entropy')
-    print('Running ' + model_names[-1])
-    dtree_clf2 = DecisionTreeClassifier(criterion='entropy', max_depth=8)
-    dtree_clf2.fit(X_train, y_train)
-    models.append(dtree_clf2)
+#     model_names.append('DecisionTree_entropy')
+#     print('Running ' + model_names[-1])
+#     dtree_clf2 = DecisionTreeClassifier(criterion='entropy', max_depth=8)
+#     dtree_clf2.fit(X_train, y_train)
+#     models.append(dtree_clf2)
     
     return models, model_names
 
