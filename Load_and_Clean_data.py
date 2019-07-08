@@ -175,7 +175,7 @@ def get_admissions(df):
     
     df['admission'] = 0
     df['admission'] = np.where( df.admission_type_id <3 , 1, 0 )
-    df['admission'] = np.where( df.admission_type_id == 7, 1, df.admission )
+    df['admission'] = np.where( df.admission_type_id == 7, 1, df.admission ) #emergency admission
     df.drop(columns=['admission_type_id'], inplace=True)
     
     return df
@@ -213,7 +213,7 @@ def get_LAMA_index(df):
     return df
 
 def get_glu_serum(df):
-    df['max_glu_serum'] = np.where(df['max_glu_serum']=='>300', 1,df['max_glu_serum'])
+    df['max_glu_serum'] = np.where(df['max_glu_serum']=='>300', 3,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='>200', 1,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='Norm', 0,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='None', 0,df['max_glu_serum'])
@@ -221,7 +221,7 @@ def get_glu_serum(df):
     return df
 
 def get_A1Cresults(df):
-    df['A1Cresult'] = np.where(df['A1Cresult']=='>8', 1,df['A1Cresult'])
+    df['A1Cresult'] = np.where(df['A1Cresult']=='>8', 10,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='>7', 1,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='Norm', 0,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='None', 0,df['A1Cresult'])
@@ -230,7 +230,7 @@ def get_A1Cresults(df):
     return df
 
 def get_age_bin(dummy_df):
-    dummy_df['age_60_100'] = dummy_df['age_[60-70)']+dummy_df['age_[70-80)']+dummy_df['age_[80-90)']+dummy_df['age_[90-100)']
+    dummy_df['age_60_100'] = (dummy_df['age_[60-70)']+dummy_df['age_[70-80)']+dummy_df['age_[80-90)']+dummy_df['age_[90-100)'])*5
     dummy_df['age_30_60'] = dummy_df['age_[30-40)']+dummy_df['age_[40-50)']+dummy_df['age_[50-60)']
     dummy_df['age_0_30'] = dummy_df['age_[0-10)']+dummy_df['age_[10-20)']+dummy_df['age_[20-30)']
 
