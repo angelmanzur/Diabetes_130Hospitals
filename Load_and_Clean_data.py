@@ -35,10 +35,12 @@ def clean_data(df):
     df.drop('medical_specialty', axis=1, inplace=True)
     # 49,000 are ?
 
+    df = df[(df.gender=='Male') | (df.gender=='Female')]
     df.readmitted = np.where(df.readmitted=='NO', 0, df.readmitted )
     df.readmitted = np.where(df.readmitted=='<30', 1,  df.readmitted )
     df.readmitted = np.where(df.readmitted=='>30', 2,  df.readmitted )
 
+    
     return df
 
 def clean_eng_data(df):
@@ -64,7 +66,8 @@ def clean_eng_data(df):
 
     df.drop('medical_specialty', axis=1, inplace=True)
     # 49,000 are ?
-
+    
+    df = df[(df.gender=='Male') | (df.gender=='Female')]
     df.readmitted = np.where(df.readmitted=='NO', 0, df.readmitted )
     df.readmitted = np.where(df.readmitted=='<30', 1,  df.readmitted )
     df.readmitted = np.where(df.readmitted=='>30', 2,  df.readmitted )
@@ -77,7 +80,7 @@ def df_featues_target(df):
 
 
     dummy_df = pd.get_dummies(df,drop_first=True)
-    to_drop = ['readmitted_1', 'readmitted_2','gender_Unknown/Invalid']
+    to_drop = ['readmitted_1', 'readmitted_2']
     for cname in to_drop:
         try:
             dummy_df.drop(cname, axis=1,inplace=True)
@@ -172,7 +175,7 @@ def get_admissions(df):
     
     df['admission'] = 0
     df['admission'] = np.where( df.admission_type_id <3 , 1, 0 )
-    df['admission'] = np.where( df.admission_type_id == 7, 1, df.admission )
+    df['admission'] = np.where( df.admission_type_id == 7, 1, df.admission ) #emergency admission
     df.drop(columns=['admission_type_id'], inplace=True)
     
     return df
@@ -210,7 +213,7 @@ def get_LAMA_index(df):
     return df
 
 def get_glu_serum(df):
-    df['max_glu_serum'] = np.where(df['max_glu_serum']=='>300', 1,df['max_glu_serum'])
+    df['max_glu_serum'] = np.where(df['max_glu_serum']=='>300', 3,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='>200', 1,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='Norm', 0,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='None', 0,df['max_glu_serum'])
@@ -218,7 +221,7 @@ def get_glu_serum(df):
     return df
 
 def get_A1Cresults(df):
-    df['A1Cresult'] = np.where(df['A1Cresult']=='>8', 1,df['A1Cresult'])
+    df['A1Cresult'] = np.where(df['A1Cresult']=='>8', 10,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='>7', 1,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='Norm', 0,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='None', 0,df['A1Cresult'])
@@ -227,13 +230,13 @@ def get_A1Cresults(df):
     return df
 
 def get_age_bin(dummy_df):
-    dummy_df['age_60_100'] = dummy_df['age_[60-70)']+dummy_df['age_[70-80)']+dummy_df['age_[80-90)']+dummy_df['age_[90-100)']
+    dummy_df['age_60_100'] = (dummy_df['age_[60-70)']+dummy_df['age_[70-80)']+dummy_df['age_[80-90)']+dummy_df['age_[90-100)'])*5
     dummy_df['age_30_60'] = dummy_df['age_[30-40)']+dummy_df['age_[40-50)']+dummy_df['age_[50-60)']
     dummy_df['age_0_30'] = dummy_df['age_[0-10)']+dummy_df['age_[10-20)']+dummy_df['age_[20-30)']
 
     to_drop = ['age_[0-10)', 'age_[10-20)', 'age_[20-30)', 'age_[30-40)',
        'age_[40-50)', 'age_[50-60)', 'age_[60-70)', 'age_[70-80)',
-       'age_[80-90)', 'age_[90-100)', 'gender_Male', 'gender_Unknown/Invalid','race_Other']
+       'age_[80-90)', 'age_[90-100)', 'gender_Male', 'race_Other']
     dummy_df.drop(columns=to_drop,inplace=True)
     return dummy_df
 

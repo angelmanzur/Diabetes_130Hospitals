@@ -95,10 +95,16 @@ def display_acc_and_f1_score(true, preds, model_name):
     Calculate the accuracy and the f1 scores 
     """
     acc = accuracy_score(true, preds)
-    f1 = f1_score(true,preds, average='micro')
+    f1 = f1_score(true,preds)
     print("Model: {}".format(model_name))
-    print("Accuracy: {}".format(acc))
-    print("F1-Score: {}".format(f1))
+    print("Accuracy: {0:0.3f}".format(acc))
+    print("F1-Score: {0:0.3f}".format(f1))
+    
+    
+    #     print("Accuracy is {0:.2f}".format(accuracy_score(y_sm_train, y_sm_train_pred)))
+#     print("Precision is {0:.2f}".format(precision_score(y_sm_train, y_sm_train_pred)))
+#     print("Recall is {0:.2f}".format(recall_score(y_sm_train, y_sm_train_pred)))
+#     print("AUC is {0:.2f}".format(roc_auc_score(y_sm_train, y_sm_train_pred)))
     return None
 
 def others(y_test, model, test_preds, scaled_df, target):
@@ -130,3 +136,30 @@ def find_best_logistic(X_train, y_train):
     
     grid.fit(X_train, y_train)
     return grid
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_selection import RFECV
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+import sklearn.metrics
+
+import matplotlib.pyplot as plt
+def roc_auc(pred, act, plot=True, label='curve'):
+    prob = pred/pred.max() # normalize
+    fpr, tpr, threshold = sklearn.metrics.roc_curve(act, prob, drop_intermediate=True)
+    auc = sklearn.metrics.auc(fpr, tpr)
+    
+    if plot:
+        plt.scatter(x=fpr, y=tpr, color='navy')
+        rcolor = tuple(np.random.rand(3,1)[:,0])
+        plt.plot(fpr, tpr, c=rcolor, lw=2, label=label + ' (AUC = %0.3f)' % auc)
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.xlabel('False Positive Rate')
+        plt.ylabel('True Positive Rate')
+        plt.title('ROC Curve')
+        plt.legend(loc="lower right")
+        plt.show()
+
+    return auc    
