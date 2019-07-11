@@ -1,6 +1,7 @@
 # Predicting hospital readmission for diabetic patients
 
 # Objective
+Predict if a hospital patient that has been diagnosed with diabetes will be readmitted into the hospital within 30 days. 
 
 # Motivation
 
@@ -74,8 +75,9 @@ For our final model, we treated the dadta in the following way:
       - `A` is the acuity of the admission, `A=3` for emergencies, and 0 otherwise
       - `E` is the number of emergency visits in the past year, maxed out at 4. 
  - The results of the glucose and the A1C   tests were set to according to the table below:
- | Original Glucose Serum | New Glucose Serum || Original A1C results | New A1C results |
- | :--: | :---: | :-: | :---: | :---: |
+ 
+ | Original Glucose Serum |New Glucose Serum || Original A1C results | New A1C results |
+ | :--: | :---:  | --|:---: | :---: |
  | >300 | 3 | | >8 | 10 |
  | >200 | 1 | | >7 | 1 |
  | Norm | 0 | | Norm | 0 |
@@ -84,16 +86,45 @@ For our final model, we treated the dadta in the following way:
  - The age categories were grouped into three age groups: from 0 to 30 years old,  30 to 60 years old, and 60 to 100 years old.
  - We also added a new columns identifying if a patient left the hospital against medical advice (LAMA).
 
+# Results
+
 After selecting these features, we dropped the patiends that would not return beacause they died in the hospital or were sent to a hospice. This reduced our data set from 101763 patients down to 99340 patients. Out of those 99340, only 11314 patients were readmitted within 30 days. Sincce our data set is imbalanced, we use the stratify optin in the train_test_split method in SciKit-Learn, to force the train and test data sets to have the same ratio of readmitted patiets. 
 
 ```python
 from sklearn.model_selectrion import train_test_split
-X_train, X_test, y_trian, y_test = train_test_split(X, y, stratify=y, test_size=0.25, random_state=101
+
+X_train, X_test, y_trian, y_test = train_test_split(X, y, 
+                        stratify=y, test_size=0.25, random_state=101
+```
+As the data was so unbalance we used whe Synthetic Minority Over-sampling Technique (SMOMTE) on our trian data, to create a new X_trian, and y_train, where 50% of the patients were readmitted, and 50% were not. We then used this synthetic data sets to train our models, and then validate them on the test datasetes. Note that the test datasets are still imbalanced. The code below shows how the training data was balanced
+
+```python
+from imblearn.over_sampling import SMOTE
+
+sm = SMOTE(random_state=101)
+X_sm_trian, y_sm_train = sm.fit_sample(X_train, y_train)
 ```
 
+The next step was to optimize the parametes for the models tested. For that we created a pipeline for the thre models, Adaboost, Logistic Regression and a Desicion Tree.
 
+The figures below show the confusion matrix and the AUC curve for the Logistic Regression. The accuracy for this model was 0.59, and the AUC score was 0.629.
 
-# Results
+![Confusion matrix for a Logistic Regression Classifier](Figures/Final_Logistic.png)
+![Confusion matrix for a Logistic Regression Classifier](Figures/Final_AUC_Logistic.png)
+
+Finally we looked the features that have the highest impact on predicting the result
+
+| Importance | Feature |
+| :--: | :---: |
+| 1* | Total number of visits |
+| 2 | Type of discharge |
+| 3* | LAE index |
+| 4 | Number of diangosis |
+| 5 | Diabetes Medicaiton |
+|6* | Age grou 60 - 100 |
+
+The * deontes the features we engineered for this analysis.
+
 
 # Summary
 
