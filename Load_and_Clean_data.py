@@ -7,12 +7,20 @@ import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
 
 def load_raw_data():
+    """
+    Load the raw data from the csv file and return a dataframe.
+    Transform the target into 0,1,2
+    """
     filename = 'dataset_diabetes/diabetic_data.csv'
     df = pd.read_csv(filename)
     print('Loaded data into dataframe')
     return df
 
 def clean_data(df):
+    """
+    Clean the dataframe, remove unique variables and constants. 
+    return the cleaned dataframe 
+    """
     # drop some unused columns
     df.drop(columns = ['patient_nbr','citoglipton','weight','examide','encounter_id'],inplace=True)
     # weight, drop coz 97% missing
@@ -44,6 +52,11 @@ def clean_data(df):
     return df
 
 def clean_eng_data(df):
+    """
+    Clean the data removing features with unique or constant values, 
+    Change Yes/No variables to 1/0 values
+    Chagne target variable to 0,1,2
+    """
     # drop some unused columns
     df.drop(columns = ['patient_nbr','citoglipton','weight','examide','encounter_id'],inplace=True)
     # weight, drop coz 97% missing
@@ -77,7 +90,9 @@ def clean_eng_data(df):
     return df
  
 def df_featues_target(df):
-
+    """
+    Return a dataframe with the categorical features turned into dummy variables
+    """
 
     dummy_df = pd.get_dummies(df,drop_first=True)
     to_drop = ['readmitted_1', 'readmitted_2']
@@ -102,11 +117,12 @@ def df_featues_target(df):
     return X, y
 
 def count_meds(df, meds_cols):
+    """
     #  Convert the medicines based on
     #  Steady or No = 0
     #  Up -> 1
     #  Down -> -1
-
+    """
 
     for med in meds_cols:
         df[med] = np.where((df[med]=='No' ),0,df[med])
@@ -135,6 +151,9 @@ def count_meds(df, meds_cols):
     return df
 
 def get_diagnosis(df, col_name):
+    """
+    Get the diagnosis and convert it into one of 9 ctegories
+    """
     print('converting diagnosis for', col_name)
     new_name = 'cat1_'+col_name
     df[new_name] = df[col_name]
@@ -166,13 +185,18 @@ def get_diagnosis(df, col_name):
     return df
 
 def get_visits(df):
+    """
+    Get the total number of visits
+    """
     df['total_visits'] = df.number_inpatient + df.number_outpatient + df.number_emergency
     # df.drop(columns=['number_inpatient', 'number_outpatient','number_emergency'],inplace=True)
     df.drop(columns=['number_inpatient', 'number_outpatient'],inplace=True)
     return df
 
 def get_admissions(df):
-    
+    """ 
+    Keep the admission, but only if it was from an emergency one. 
+    """
     df['admission'] = 0
     df['admission'] = np.where( df.admission_type_id <3 , 1, 0 )
     df['admission'] = np.where( df.admission_type_id == 7, 1, df.admission ) #emergency admission
@@ -182,17 +206,22 @@ def get_admissions(df):
 
 
 def get_procedures(df):
+    """
+    Get total number of procedures
+    """
     df.total_procedures = df.num_lab_procedures +    df.num_procedures
     df.drop(columns=['num_lab_procedures', 'num_procedures'], inplace=True)
 
     return df
 
 def get_LAE_index(df):
+    """ 
+    Create a LAE index
     # Creating an index based on the LACE index
     # L day in the hospital
     # A : acuity of admission,  3 for emergency, 0 otherwise
     # E : number of emergency visits 4 or smaller
-    
+    """
     df['LAE_index'] = df['time_in_hospital']
 # get the L value
 
@@ -208,11 +237,17 @@ def get_LAE_index(df):
     return df
 
 def get_LAMA_index(df):
+    """
+    Create a LAMA: Leave Against Medical Advice feature
+    """
     df['LAMA'] = 0
     df['LAMA'] = np.where( df['discharge_disposition_id']==7, 1, 0)
     return df
 
 def get_glu_serum(df):
+    """
+    Get restuls form ht glucose serum
+    """
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='>300', 3,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='>200', 1,df['max_glu_serum'])
     df['max_glu_serum'] = np.where(df['max_glu_serum']=='Norm', 0,df['max_glu_serum'])
@@ -221,6 +256,9 @@ def get_glu_serum(df):
     return df
 
 def get_A1Cresults(df):
+    """
+    Get results from the A1C test
+    """
     df['A1Cresult'] = np.where(df['A1Cresult']=='>8', 10,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='>7', 1,df['A1Cresult'])
     df['A1Cresult'] = np.where(df['A1Cresult']=='Norm', 0,df['A1Cresult'])
@@ -230,6 +268,9 @@ def get_A1Cresults(df):
     return df
 
 def get_age_bin(dummy_df):
+    """
+    Set the age bins into one of three categories: 0 to 30, 30 to 60 and 60 to 100
+    """
     dummy_df['age_60_100'] = (dummy_df['age_[60-70)']+dummy_df['age_[70-80)']+dummy_df['age_[80-90)']+dummy_df['age_[90-100)'])*5
     dummy_df['age_30_60'] = dummy_df['age_[30-40)']+dummy_df['age_[40-50)']+dummy_df['age_[50-60)']
     dummy_df['age_0_30'] = dummy_df['age_[0-10)']+dummy_df['age_[10-20)']+dummy_df['age_[20-30)']
@@ -241,6 +282,10 @@ def get_age_bin(dummy_df):
     return dummy_df
 
 def get_one_diagnosis(cleaned_df):
+    """
+    There are three diagnosis, get only one. 
+    Use the one from the diag1 feature, unless diag2 equals diag3
+    """
     cleaned_df['diagnosis'] = cleaned_df['cat1_diag_1']
     cleaned_df['diagnosis'] = np.where( ((cleaned_df['cat1_diag_2']==cleaned_df['cat1_diag_3']) & (cleaned_df['cat1_diag_2']>0)),
                     cleaned_df['cat1_diag_2'], cleaned_df['cat1_diag_1'] )
@@ -252,6 +297,9 @@ def get_one_diagnosis(cleaned_df):
     return diagnosis_df
 
 def remove_patients(diagnosis_df):
+    """
+    Remove patients that died in the hospital or were sent to hospice
+    """
     print('number of patients', len(diagnosis_df))
     diagnosis_df = diagnosis_df[diagnosis_df['diagnosis_-1']==0]
     diagnosis_df.drop(columns=['diagnosis_-1'], inplace=True)
@@ -278,12 +326,18 @@ def sort_asc_corr(df, value):
     return corr_df.sort_values(by = value, ascending=False)
 
 def save_X_y(X,y):
+    """
+    Save features X and target y into a features.csv and target.csv file
+    """
     X.to_csv('dataset_diabetes/features.csv', index=False)
     y.to_csv('dataset_diabetes/target.csv',index=False)
 
     pass
 
 def load_X_y():
+    """ 
+    Loead the features and target from the features.csv and target.csv files in the dataset_diabetes folder
+    """
     X = pd.read_csv('dataset_diabetes/features.csv')
     y = pd.read_csv('dataset_diabetes/target.csv',header=None)
     y.columns = ['readmitted']
