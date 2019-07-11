@@ -55,7 +55,7 @@ def train_model(X_train,y_train):
 #     models.append(xgb_clf)
     
     # Logistic Regression
-    model_names.append('Logistic Regresion')
+    model_names.append('Logistic_Regresion')
     print('Running ' + model_names[-1])
     lr_clf = LogisticRegression(fit_intercept = False, C = 1e12)
     lr_clf.fit(X_train, y_train)
@@ -95,10 +95,10 @@ def display_acc_and_f1_score(true, preds, model_name):
     Calculate the accuracy and the f1 scores 
     """
     acc = accuracy_score(true, preds)
-    f1 = f1_score(true,preds)
+#     f1 = f1_score(true,preds)
     print("Model: {}".format(model_name))
     print("Accuracy: {0:0.3f}".format(acc))
-    print("F1-Score: {0:0.3f}".format(f1))
+#     print("F1-Score: {0:0.3f}".format(f1))
     
     
     #     print("Accuracy is {0:.2f}".format(accuracy_score(y_sm_train, y_sm_train_pred)))
