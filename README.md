@@ -110,7 +110,7 @@ The next step was to optimize the parametes for the models tested. For that we c
 The figures below show the confusion matrix and the AUC curve for the Logistic Regression. The accuracy for this model was 0.59, and the AUC score was 0.629.
 
 ![Confusion matrix for a Logistic Regression Classifier](Figures/Final_Logistic.png)
-![Confusion matrix for a Logistic Regression Classifier](Figures/Final_AUC_Logistic.png)
+![Area under the curve plot for a Logistic Regression Classifier](Figures/Final_AUC_Logistic.png)
 
 Finally we looked the features that have the highest impact on predicting the result
 
