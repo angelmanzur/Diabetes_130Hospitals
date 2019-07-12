@@ -3,7 +3,9 @@
 # Objective
 Predict if hospitalized diabetes patientscwill be readmitted into the hospital within 30 days. 
 
-# Motivation
+## Motivation
+According to the [CDC](https://www.cdc.gov/media/releases/2017/p0718-diabetes-report.html) there are more than 100 million americans have diabetes of prediabetes. Acording to [Ostling et al.](https://clindiabetesendo.biomedcentral.com/articles/10.1186/s40842-016-0040-x), hospitalized patients that have diabetes mellitus have higher thirty day readmission rates (14.4-22.7%), than all other patients (8.5-13.5%) hospitalized.
+Predicting if a patient will be readmitted within 30 days is not only important for the patients, but to the hospitals as well. There are progams such as the [Hospital Readmission Reduction Program](https://www.cms.gov/Medicare/Quality-Initiatives-Patient-Assessment-Instruments/Value-Based-Programs/HRRP/Hospital-Readmission-Reduction-Program.html) which lowers payments to hospitals with too many readmissions.
 
 # Data
 The data was downloaded from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008). The dataset consists of +100,000 patients admitted into a hospital and diagnosed with diabetes. The data was compiled from 130 US hospitals between 1998 and 2008.
@@ -127,7 +129,9 @@ Finally we looked the features that have the highest impact on predicting the re
 The * deontes the features we engineered for this analysis.
 
 
-# Summary
+# Summary & future work
+We created a model to predict the number if a patient diagnosed with Diabetes will be readmitted into a hospital within 30 days. To create our model, we engineered several features to help improve the prediction. Three of these engineered features show among the most important features (starred entries in the table above).  In this work, we balanced the trian data to have an equal number of readmitted patients and trained three models: Desicion Tree, AdaBoost and Logistic Regression. After a  Grid Search of the parameters we obtained our final model.  
+While our model preforms better than our initial model using all the features available, there is plenty of room for improvement as we did not do an exhaustive tuning of the parameters.  After testing several other models, we came to the conclusion that more than testing new models, we need to focus on gaining more domain expertise. We need to better understand the features and how to interpret their different values.
 
 # References
 
