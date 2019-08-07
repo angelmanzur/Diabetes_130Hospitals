@@ -1,5 +1,7 @@
 # Predicting hospital readmission for diabetic patients
 
+Bassel Haidar, Angel Manzur
+
 # Objective
 Predict if hospitalized diabetes patientscwill be readmitted into the hospital within 30 days. 
 
