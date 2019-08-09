@@ -3,7 +3,7 @@
 Bassel Haidar, Angel Manzur
 
 # Objective
-Predict if hospitalized diabetes patientscwill be readmitted into the hospital within 30 days. 
+Predict if hospitalized diabetes patients will be readmitted into the hospital within 30 days. 
 
 ## Motivation
 According to the [CDC](https://www.cdc.gov/media/releases/2017/p0718-diabetes-report.html) there are more than 100 million americans have diabetes of prediabetes. Acording to [Ostling et al.](https://clindiabetesendo.biomedcentral.com/articles/10.1186/s40842-016-0040-x), hospitalized patients that have diabetes mellitus have higher thirty day readmission rates (14.4-22.7%), than all other patients (8.5-13.5%) hospitalized.
