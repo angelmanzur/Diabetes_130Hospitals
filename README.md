@@ -101,7 +101,7 @@ from sklearn.model_selectrion import train_test_split
 X_train, X_test, y_trian, y_test = train_test_split(X, y, 
                         stratify=y, test_size=0.25, random_state=101
 ```
-As the data was so unbalance we used whe Synthetic Minority Over-sampling Technique (SMOMTE) on our trian data, to create a new X_trian, and y_train, where 50% of the patients were readmitted, and 50% were not. We then used this synthetic data sets to train our models, and then validate them on the test datasetes. Note that the test datasets are still imbalanced. The code below shows how the training data was balanced
+As the data was so unbalance we used whe Synthetic Minority Over-sampling Technique (SMOTE) on our trian data, to create a new X_trian, and y_train, where 50% of the patients were readmitted, and 50% were not. We then used this synthetic data sets to train our models, and then validate them on the test datasetes. Note that the test datasets are still imbalanced. The code below shows how the training data was balanced
 
 ```python
 from imblearn.over_sampling import SMOTE
@@ -131,9 +131,9 @@ Finally we looked the features that have the highest impact on predicting the re
 The * deontes the features we engineered for this analysis.
 
 
-# Summary & future work
-We created a model to predict the number if a patient diagnosed with Diabetes will be readmitted into a hospital within 30 days. To create our model, we engineered several features to help improve the prediction. Three of these engineered features show among the most important features (starred entries in the table above).  In this work, we balanced the trian data to have an equal number of readmitted patients and trained three models: Desicion Tree, AdaBoost and Logistic Regression. After a  Grid Search of the parameters we obtained our final model.  
-While our model preforms better than our initial model using all the features available, there is plenty of room for improvement as we did not do an exhaustive tuning of the parameters.  After testing several other models, we came to the conclusion that more than testing new models, we need to focus on gaining more domain expertise. We need to better understand the features and how to interpret their different values.
+# Summary and Future Work
+We created a model to predict if a patient diagnosed with diabetes will be readmitted into a hospital within 30 days. To create our model, we engineered several features to help improve the prediction. Three of these engineered features proved to be in the top 6 of the most important features (see starred entries in the table above).  In this work, we balanced the training dataset to have an equal number of readmitted patients and trained three models: Desicion Tree, AdaBoost and Logistic Regression. We used a Grid Search of the parameters to obtain our final model.  
+While our model preforms better than our initial model using all the features available, there is room for improvement as we did not do an exhaustive tuning of the parameters.  After testing several other models, we came to the conclusion that more than testing new models, we need to focus on gaining more domain expertise. We need to better understand the features and how to interpret their different values as new feature engineering will yield the best results.
 
 # References
 
